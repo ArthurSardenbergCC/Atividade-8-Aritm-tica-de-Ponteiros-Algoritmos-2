@@ -1,0 +1,299 @@
+Atividade 8 - Letra G
+
+#include <iostream>
+#define N 3
+#define M 2
+using namespace std;
+
+int juncao_vetores (int vetor1 [N], int vetor2 [M]){
+    int X [N + M] = {0}, *ponteiro = NULL, i = 0, auxiliar = 0;
+    
+    ponteiro = vetor1;
+    for (i = 0; i < N; i++){
+        X [i] = *ponteiro;
+        ponteiro++;
+    }
+    
+    auxiliar = N;
+    
+    ponteiro = vetor2;
+    for (i = 0; i < M; i++){
+        X [i + auxiliar] = *ponteiro;
+        ponteiro++;
+    }    
+
+    return X;
+}
+
+int main(){
+    int a = 0, b = 0, V[N] = {2, 5, 7}, Y [M] = {3, 8}, Z [N + M] = {0}, i = 0;
+
+    Z = juncao_vetores (V, Y);    
+  
+    for (i = 0; i < N + M; i++){
+       cout << Z [i] << " ";
+    }    
+    return 0;
+}
+
+A primeira tentativa de retornar um array foi essa e ficou claro que não é possível realizá-la devido ao processamento incorreto "Z = juncao_vetores (V, Y)", o fato da memória ocupada por "X" em seu escopo é liberada no final da função "juncao_vetores" e "X" em "return X" retornar o endereço de memória do início do array ao invés de seu conteúdo.
+
+
+
+
+Pergunta ao Gemini:
+Eu tentei, no código abaixo, retornar o array "X" para a função principal. O resultado foi que o array "Z", que deveria receber "X", foi impresso como uma sequência de zeros. Há uma forma de realizar esse retorno sem usar o "std::vector" ou "std::array"?
+
+
+Resposta Comentada:
+
+Comentário: o Gemini sugeriu que a modificação de "Z" ocorresse por referência ao invés de retornar algo, o que não era permitido pelo exercício.
+
+Olá! Vejo que você está tentando concatenar dois vetores em C++ e retornar o resultado para a função principal. É um ótimo exercício para entender como as memórias e ponteiros funcionam.
+
+O problema principal no seu código é que você está tentando retornar um array local "X" da função juncao_vetores. Quando a função termina, a memória que o X ocupava é liberada, e o que é retornado para a função main é um ponteiro inválido para essa área de memória. A linha "return X;" não retorna o conteúdo do array, mas sim o seu endereço de memória, que se torna inválido ao final da execução da função.
+
+Além disso, a linha "Z = juncao_vetores(V, Y);" está incorreta, pois não é possível atribuir um array a outro dessa forma em C++.
+
+Para resolver isso, você precisa passar o array Z como um parâmetro para a sua função. Dessa forma, a função não precisa retornar nada. Ela apenas preenche o array que já existe na função main.
+
+Solução com Ponteiros
+A forma mais comum de fazer isso em C e C++ sem usar std::vector ou std::array é passar o vetor de destino como um ponteiro.
+
+#include <iostream>
+
+#define N 3
+#define M 2
+
+using namespace std;
+
+// A função agora recebe um terceiro parâmetro: o vetor de destino
+void juncao_vetores(int vetor1[], int vetor2[], int vetor_destino[]) {
+    int i = 0;
+
+    // Copia os elementos do primeiro vetor
+    for (i = 0; i < N; i++) {
+        vetor_destino[i] = vetor1[i];
+    }
+
+    // Copia os elementos do segundo vetor, continuando a partir do final do primeiro
+    for (i = 0; i < M; i++) {
+        vetor_destino[N + i] = vetor2[i];
+    }
+}
+
+int main() {
+    int V[N] = {2, 5, 7};
+    int Y[M] = {3, 8};
+    int Z[N + M] = {0};
+
+    // Chama a função, passando V, Y e Z
+    juncao_vetores(V, Y, Z);
+
+    // Imprime o resultado
+    for (int i = 0; i < N + M; i++) {
+        cout << Z[i] << " ";
+    }
+    cout << endl; // Adiciona uma quebra de linha no final
+
+    return 0;
+}
+
+Comentário: Note que esse código não usa aritmética de ponteiros, mas eliminou eficazmente a variável "auxiliar".
+
+Explicação das Alterações:
+
+1) Tipo de Retorno: A função juncao_vetores agora é void, pois ela não retorna nada. Ela modifica o vetor Z diretamente.
+
+2) Parâmetro de Destino: Adicionei um terceiro parâmetro int vetor_destino[]. Esse é o array Z da função main, que será preenchido.
+
+3) Remoção de Variáveis Locais: As variáveis X, ponteiro e auxiliar foram removidas, já que não são mais necessárias. A cópia dos elementos agora é feita diretamente para vetor_destino.
+
+4) Chamada da Função: Na main, a chamada agora é juncao_vetores(V, Y, Z);.
+
+Dessa forma, a função preenche o array Z que já existe na main e, como ele não é uma variável local da função, a memória não é liberada. Você pode então imprimir o resultado na main com sucesso.
+
+
+
+
+Há, entretanto, várias opções de retornar um array de inteiros:
+
+Para retornar um array de inteiros em C++ você pode usar: a classe std::vector que é a forma mais moderna e flexível; std::array para arrays de tamanho fixo definido em tempo de compilação; retornar um ponteiro para um array dinamicamente alocado (com responsabilidade de desalocação); ou usar uma referência de array, passando um array por referência para a função preenchê-lo. 
+
+Repare que, tanto no vector como no array, haverá necessidade de preencher a estrutura utilizada antes de retorná-la à função principal.
+
+
+Uso do "vector" para retornar a sequência:
+
+Para retornar um std::vector<int> em C++, a forma mais idiomática é simplesmente usar a instrução return com a variável do tipo std::vector, pois a cópia de objetos std::vector é tratada eficientemente pelo compilador. Se for necessário adicionar elementos a um vetor que foi passado para uma função, envie-o por referência usando std::vector<int>&, e para apenas ler seus dados, use const std::vector<int>& para evitar modificações acidentais. 
+
+A maneira mais simples e moderna é criar o std::vector dentro da função e retorná-lo:
+
+#include <vector> // Incluir a biblioteca para usar std::vector
+#include <iostream>
+
+// Função que retorna um std::vector de inteiros
+std::vector<int> criarVetor() {
+    std::vector<int> meuVetor; // Cria um vetor vazio
+    meuVetor.push_back(10);   // Adiciona um elemento
+    meuVetor.push_back(20);   // Adiciona outro elemento
+    meuVetor.push_back(30);
+    return meuVetor; // Retorna o vetor criado
+}
+
+int main() {
+    std::vector<int> vetorResultado = criarVetor(); // Chama a função e recebe o vetor
+
+    // Imprime os elementos do vetor recebido
+    for (int valor : vetorResultado) {
+        std::cout << valor << " ";
+    }
+    // Saída: 10 20 30
+    return 0;
+}
+
+Outro exemplo:
+#include <vector>
+#include <iostream>
+
+std::vector<int> criarVetor() {
+    std::vector<int> meuVetor = {1, 2, 3, 4, 5};
+    return meuVetor; // O vetor é retornado por cópia (ou por movimento)
+}
+
+int main() {
+    std::vector<int> vetorRecebido = criarVetor();
+    for (int val : vetorRecebido) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl; // Saída: 1 2 3 4 5
+    return 0;
+}
+
+Passagem por referência: Se você precisa que a função modifique um vetor já existente ou que a criação do vetor seja custosa, pode passar um vetor por referência e preenchê-lo dentro da função. 
+
+    void preencherVetor(std::vector<int>& vec) {
+        vec.push_back(1);
+        vec.push_back(2);
+    }
+
+Extra: tamanho de um "vector"
+
+Para definir o tamanho de um std::vector em C++, podes fazer uma de duas coisas: declarar o vetor com o tamanho desejado usando um construtor, como std::vector<int> meuVetor(10); para um vetor de 10 inteiros, ou redimensioná-lo dinamicamente usando o método resize(), por exemplo meuVetor.resize(20); para aumentar ou diminuir o tamanho. 
+
+1) Definir o tamanho na criação:
+Quando um std::vector é criado, podes especificar o seu tamanho inicial.
+
+a) Para um tamanho específico.
+    #include <vector>
+
+    int main() {
+        // Cria um vetor de 10 inteiros com os valores inicializados para 0 (por padrão)
+        std::vector<int> meuVetor(10); 
+        return 0;
+    }
+
+b) Para um tamanho e valor específicos.
+    #include <vector>
+
+    int main() {
+        // Cria um vetor de 5 inteiros, onde todos os elementos são 0
+        std::vector<int> meuVetor(5, 0); 
+        return 0;
+    }
+
+2)Redimensionar o vetor dinamicamente:
+
+Se o vetor já foi criado e precisas alterar o seu tamanho, podes usar o método resize(): Aumentar ou diminuir o tamanho. 
+C++
+
+    #include <vector>
+
+    int main() {
+        std::vector<int> meuVetor = {1, 2, 3}; // Inicializa com 3 elementos
+
+        // Aumenta o tamanho do vetor para 5 elementos
+        meuVetor.resize(5); 
+        // Agora o vetor contém {1, 2, 3, 0, 0}
+
+        // Reduz o tamanho do vetor para 2 elementos
+        meuVetor.resize(2); 
+        // Agora o vetor contém {1, 2}
+
+        return 0;
+    }
+
+Pontos importantes:
+a) O método resize(n, val) redimensiona o vetor para o tamanho n. Se o novo tamanho for maior que o atual, os elementos adicionados são inicializados com val (que é 0 por padrão se não for especificado). 
+
+b) O tamanho deve ser sempre um número positivo. 
+
+c) Para obter o número de elementos num std::vector, usa-se o método size()
+
+
+
+Uso de um array para o retorno:
+
+#include <array>
+#include <iostream>
+
+std::array<int, 5> criarStdArray() {
+    std::array<int, 5> meuArray = {10, 20, 30, 40, 50};
+    return meuArray; // O array é retornado por cópia (ou por movimento)
+}
+
+int main() {
+    std::array<int, 5> arrayRecebido = criarStdArray();
+    for (int val : arrayRecebido) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl; // Saída: 10 20 30 40 50
+    return 0;
+}
+
+
+
+Uso de um ponteiro que retona para um array dinâmico:
+Você aloca memória no heap para o array e retorna o ponteiro. É crucial desalocar a memória usando delete[] quando não for mais necessária. 
+
+#include <iostream>
+
+int* criarArrayDinamico(int tamanho) {
+    int* meuArray = new int[tamanho]; // Aloca no heap
+    for (int i = 0; i < tamanho; ++i) {
+        meuArray[i] = i * 10;
+    }
+    return meuArray; // Retorna o ponteiro para o array alocado
+}
+
+int main() {
+    int tamanho = 4;
+    int* arrayRecebido = criarArrayDinamico(tamanho);
+    for (int i = 0; i < tamanho; ++i) {
+        std::cout << arrayRecebido[i] << " ";
+    }
+    std::cout << std::endl; // Saída: 0 10 20 30
+    delete[] arrayRecebido; // Desaloca a memória
+    return 0;
+}
+
+
+
+Função que recebe um array (ou vetor) por referência e o modifica diretamente:
+
+#include <vector>
+#include <iostream>
+
+void preencherVetor(std::vector<int>& vetor) {
+    vetor = {100, 200, 300};
+}
+
+int main() {
+    std::vector<int> meuVetor(3); // Declara um vetor com tamanho 3
+    preencherVetor(meuVetor);
+    for (int val : meuVetor) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl; // Saída: 100 200 300
+    return 0;
+}

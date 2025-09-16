@@ -1,0 +1,358 @@
+Uso da instrução "sizeof" - exemplo do capítulo
+
+#include <iostream>
+using namespace std;
+
+struct data_1{
+	int dia, mes, ano;
+};
+int main() {
+	char letra[5] = {'a', 'e', 'i', 'o', 'u'};
+	int numero[5] = {30, 12, 67, 13, 41};
+	struct data_1 fds[2] = {20, 02, 2021, 21, 02, 2021};
+	
+	cout << "Tamanho do tipo char: " << sizeof(char) << endl;
+	cout << "Tamanho do tipo int: " << sizeof(int) << endl;
+	cout << "Tamanho do tipo float: " << sizeof(float) << endl;
+	cout << "Tamanho do tipo double: " << sizeof(double) << endl;
+	cout << "Tamanho da struct data: " << sizeof(data_1) << endl;
+	cout << "Tamanho do vetor letra: " << sizeof(letra) << endl;
+	cout << "Tamanho do vetor numero: " << sizeof(numero) << endl;
+	cout << "Tamanho do vetor fds: " << sizeof(fds) << endl;
+	return 0;
+}
+
+
+Exercícios do capítulo "Aritmética de Ponteiros" - páginas 66 a 68 - atividade 8
+
+Letra A
+
+A alternativa "C" é a correta, pois ao utilizar o vetor como parâmetro de uma função, o endereço do primeiro elemento do vetor é passado para à função.
+
+O nome de um vetor (sem os colchetes) em C/C++ funciona como um ponteiro apontado para a primeira posição do vetor, logo ele conterá o valor do endereço de memória desse elemento. Caso for utilizado o operador de indireção "*", o valor contido nesse endereço será acessado.
+
+Observe o código abaixo:
+
+#include <iostream>
+using namespace std;
+
+void teste (int v[]){
+    cout << v << endl;
+    cout << *v << endl;
+    cout << v[0] << endl;
+}
+
+int main(){
+    int n [] = {1, 2, 3};
+    
+    teste (n);
+    cout << & n[0] << endl;
+    return 0;
+}
+
+A primeira saída será igual a última, pois são duas formas diferentes de obter o endereço de memória do primeiro elemento do vetor. A segunda e terceira saídas também são iguais, pois exibem o valor contido nesse endereço de memória.
+
+
+Letra B
+
+#include <stdio.h>
+
+int main(){
+ int y, *p, x;
+ y = 0;
+ p = &y;
+ x = *p;
+ printf ("x = %d\n", x);
+ x = 4;
+ (*p)++;
+ printf ("p = %d\n", *p);
+ x--;
+ printf ("x = %d\n", x);
+ (*p) += x;
+ printf ("y = %d\n", y);
+ return(0);
+}
+
+O valor inicial da variável "y" é 0 (conforme o primeiro processamento). A primeira saída exibe o valor "0", pois a variável "x" recebeu o valor para o qual ponteiro "p" aponta. Depois o valor de "y" sobe uma unidade pelo processamento "(*p)++" e o valor de "x" passa a ser 3, pela atribuição "x = 4" e posterior decréscimo de 1 unidade ("x--"). Por fim, o processamento "(*p) += x" resulta na soma do valor de "y" (valor para o qual "p" aponta) com "x", resultando na saída final exibir o número 4.
+
+
+Letra C
+#include <stdio.h>
+
+int main() {
+	int i, *pa;
+	int a[] = {7, 9, 1, 10, 15};
+	pa = a;
+	for (i = 0; i < 5; i++) {
+		printf("\npa = %d", *(a+i));
+	}
+	return 0;
+}
+
+Afirmação 1: verdadeiro, pois a atribuição "pa = & a [0]" resultará sempre na atribuição à "pa" do endereço de memória do primeiro elemento de "a". O valor de "pa" passa a ser igual à variável "a".
+
+Observe o código abaixo:
+#include <iostream>
+using namespace std;
+
+int main() {
+	int i, *pa;
+	int a[] = {7, 9, 1, 10, 15};
+	pa = &a[0];
+	cout << pa << endl;
+	cout << a << endl;
+	return 0;
+}
+
+Note que ambas as saídas serão iguais já que o ponteiro "pa" recebeu o endereço de memória do primeiro elemento do vetor e o valor da variável "a", nesse contexto, é desse mesmo endereço de memória ("a" funciona como um ponteiro apontado para o primeiro elemento).
+
+
+Afirmação 2: verdadeiro, pois a variável "pa" receberá o mesmo endereço de memória nos processamentos "pa = & a [0]" e "pa = a". No primeiro há a atribuição do endereço de memória do primeiro elemento do vetor por meio do operador de endereço "&" e do índice "[0]". Já no segundo é utilizada a propriedade do vetor sem colchetes no C/C++ ser um ponteiro apontado para o primeiro elemento do vetor.
+
+Exemplo de código:
+#include <iostream>
+using namespace std;
+
+int main() {
+	int i, *pa;
+	int a[] = {7, 9, 1, 10, 15};
+	pa = a;
+	cout << pa << endl;
+	cout << a << endl;
+	return 0;
+}
+
+
+Afirmação 3: verdadeiro, pois o vetor pode ser percorrido, dentro de um estrutura de repetição, por meio de seus índices (como em "a[i]") ou através dos endereços de memória, utilizando "*(a+i)". Nesse segundo caso os valores de cada posição do vetor são acessados por meio do operador de indireção "*", sendo que a soma "a + i" garante, uma vez que "i" seja "0" no início, que cada endereço de memória utilizado pelo vetor seja acessado durante a execução do loop.
+
+A soma "a + i" representa um deslocamento de ponteiro por meio de uma aritmética de ponteiros.
+
+Observe o código abaixo:
+#include <stdio.h>
+
+int main() {
+	int i, *pa;
+	int a[] = {7, 9, 1, 10, 15};
+	pa = a;
+	for (i = 0; i < 5; i++) {
+		printf("\n pa = %d", a[i]);
+	}
+	return 0;
+} 
+
+Note que a saída desse algoritmo será igual a vista no primeiro código desse exercício.
+
+
+Letra D
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	int x = 0, *p;
+	x = 10;
+	*p = x;
+	return 0;
+}
+
+O problema do código é tentar desreferenciar um ponteiro que não aponta para um endereço de memória válido. Isso causará o erro 139 devido à tentativa de acesso a um local de memória não alocado. No caso do Online GDB, o programa é executado, mas o fato do ponteiro declarado ter um comportamento indefinido poderá causar erros se novas instruções forem feitas.
+
+Lembre-se que a maioria dos ambientes de programação gera o erro de segmentação quando ponteiros não inicializados são desreferenciados. O Online GDB é uma exceção, mas o "comportamento indefinido" ainda existe e causa erros dependendo da instrução executada.
+
+
+Letra E
+
+#include <iostream>
+using namespace std;
+
+int main() {
+	float *pa, *pb;
+	float vet[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	pa = &vet[0];
+	pb = &vet[9];
+	cout << "pa = " << pa << " " << "pb = " << pb << endl;
+	cout << "pb - pa = " << pb - pa << endl;
+	return 0;
+}
+
+Cuidado! Não é possível somar ou subtrair dois (ou mais) ponteiros entre si, a não ser que eles apontem para elementos do mesmo array.
+
+O ponteiro "pa" aponta para o endereço de memória da posição "0" do vetor, enquanto o ponteiro "pb" aponta para a posição "9".
+
+A primeira impressão mostrará os endereços para os quais cada ponteiro aponta, enquanto a segunda mostrará "9". Este resultado é consequência do processamento realizado ser uma aritmética de ponteiros, a qual consiste em uma subtração do ponteiro de maior índice pelo de menor. 
+
+Como 9 - 0 = 9, o resultado impresso é "9". Note que a diferença entre eles é dado em números de elementos, não de bytes.
+
+Cuidado! O resultado de uma soma ou subtração de ponteiros no formato do código acima é um inteiro chamado "std::ptrdiff_t", o qual armazena a diferença em número de elementos (ele é específico para aritmética de ponteiros), não a diferença em endereços de memória. Isso é útil para determinar a distância entre dois elementos em um array.
+
+A subtração entre ponteiros não é um endereço de memória, mas um valor inteiro que representa a quantidade de elementos que separam esses dois ponteiros. Logo, tentar atribuir esse valor inteiro a uma variável que foi declarada como ponteiro (float *pa) resultará em um erro de conversão inválida já que ponteiros armazenam endereços de memória, não valores numéricos.
+
+Veja o código abaixo:
+#include <iostream>
+using namespace std;
+
+int main() {
+	float *pa, *pb;
+	float vet[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+	pa = &vet[0];
+	pb = &vet[9];
+	cout << "pa = " << pa << " " << "pb = " << pb << endl;
+	pa = pb - pa;
+	cout << "pa = " << pa << endl;
+	return 0;
+}
+
+Note que o erro está na tentativa de armazenar um tipo de dado inteiro (pb - pa) em uma variável (float *pa) que é um ponteiro.
+
+Contudo, é possível utilizar o resultado da aritmética de ponteiros como índice. Tome cuidado, entretanto, com o índice resultante. "pa = &vet [pa - pb]" resultará no acesso de uma posição fora do escopo do array (pode não gerar erros, mas é bem provavél de tornar o programa instável), enquanto "pa = &vet [pb - pa]" retornará um valor válido. 
+
+
+Letra F
+#include <iostream>
+using namespace std;
+
+int main(){
+    char x = '0';
+    char *pc1, *pc2, *pc3, *pc4;
+    
+    pc1 = &x;
+    pc2 = pc1++;
+    pc3 = pc2 + 4;
+    pc4 = pc3 - 5;
+
+    return 0;
+}
+
+Lembre-se! Uma variável "char" ocupa 1 byte de memória, logo atente-se na hora de colocar os endereços em testes de mesa.
+
+O valor final de "pc1" é 1001, pois esse ponteiro aponta para o endereço de memória de "x" e é deslocado uma unidade para a direita no processamento "pc2 = pc1++".
+
+O valor final de "pc2" é 1000, pois esse ponteiro aponta para o mesmo endereço de memória que "pc1" original, pois o processamento "pc2 = pc1++" é iniciado com a atribuição "pc2 = pc1".
+
+O valor final de "pc3" é 1004, pois esse ponteiro aponta para o resultado de "pc2 + 4", o qual é o endereço de "x" deslocado quatro unidades para a direita.
+
+O valor final de "pc4" é 999, pois esse ponteiro aponta para o resultado de "pc3 - 5", o qual é o primeiro endereço à esquerda do de "x".
+
+
+Letra G
+
+#include <iostream>
+#include <climits>
+#include <vector>
+#define N 3
+#define M 2
+using namespace std;
+
+void minimo_maximo (int vetor [N], int *v1, int *v2){
+    int *ponteiro = NULL, i = 0, menor = INT_MAX, maior = INT_MIN;
+    
+    ponteiro = vetor;
+    for (i = 0; i < N; i++){
+        if (*ponteiro > maior){
+            maior = *ponteiro;
+            *v2 = *ponteiro;
+        }
+        if (*ponteiro < menor){
+            menor = *ponteiro;
+            *v1 = *ponteiro;
+        }
+        ponteiro++;
+    }
+    ponteiro = vetor;
+    
+    cout << "Menor: " << *v1 << " " << "Maior: " << *v2 << endl;
+}
+
+vector<int> juncao_vetores (int vetor1 [N], int vetor2 [M]){
+    int *ponteiro = NULL, i = 0, auxiliar = 0;
+    vector <int> X (N + M);
+    
+    ponteiro = vetor1;
+    for (i = 0; i < N; i++){
+        X [i] = *ponteiro;
+        ponteiro++;
+    }
+    
+    auxiliar = N;
+    
+    ponteiro = vetor2;
+    for (i = 0; i < M; i++){
+        X [i + auxiliar] = *ponteiro;
+        ponteiro++;
+    } 
+    
+    return X;
+}
+
+void separar_vetor (int vetor [N]){
+    int *ponteiro = NULL, i = 0, contador1 = 0, contador2 = 0;
+    vector <int> pares, impares; 
+    
+    ponteiro = vetor;
+    for (i = 0; i < N; i++){
+        if (*ponteiro % 2 == 0){
+            pares.push_back(*ponteiro);
+            contador1++;
+        } else {
+            impares.push_back(*ponteiro);
+            contador2++;
+        }
+        ponteiro++;    
+    }
+    
+    cout << "Pares: ";
+    for (i = 0; i < contador1; i++){
+        cout << pares [i] << " ";
+    }
+    cout << endl;
+    
+    cout << "Ímpares: ";
+    for (i = 0; i < contador2; i++){
+        cout << impares [i] << " ";
+    }
+    cout << endl;
+}
+
+int main(){
+    int a = 0, b = 0, V[N] = {2, 5, 7}, Y [M] = {3, 8}, i = 0;
+    vector <int> Z;
+    
+    minimo_maximo (V, &a, &b);
+    
+    Z = juncao_vetores (V, Y);
+    
+    for (i = 0; i < N + M; i++){
+       cout << Z [i] << " ";
+    }
+    cout << endl;
+    
+    separar_vetor (V);
+
+    return 0;
+}
+
+É possível realizar a passagem do array criado na função de várias formas, mas nesse caso foi escolhido utilizar a estrutura "vector". 
+
+Tome cuidado, entretanto, em usar o "vector" na forma "vector <int> nome = {0}", pois a primeira posição do vetor será ocupada pelo número "0". Também atente-se para não usar o processamento "X.push_back(i)", pois irá colocar a contagem do "for" no vetor ao invés dos valores que deseja.
+ 
+Note que é possível preencher um "vector" com o uso da função "push_back(elemento_a_ser_inserido)" (caso da terceira função) ou definindo o tamanho dele e atribuindo a cada posição um dado valor (como foi feito na segunda função).
+
+Abaixo está um exemplo da segunda função refeita com o "push_back()":
+vector<int> juncao_vetores (int vetor1 [N], int vetor2 [M]){
+    int *ponteiro = NULL, i = 0;
+    vector <int> X;
+    
+    ponteiro = vetor1;
+    for (i = 0; i < N; i++){
+        X.push_back(*ponteiro);
+        ponteiro++;
+    }
+    
+    ponteiro = vetor2;
+    for (i = 0; i < M; i++){
+        X.push_back(*ponteiro);
+        ponteiro++;
+    } 
+    
+    return X;
+}
